@@ -49,7 +49,7 @@ jobs:
             git config user.name "ci-build"
       - add_ssh_keys:
           fingerprints:
-            - "fd:f0:14:57:6a:7f:42:98:ce:b6:99:a6:84:f4:c9:c4"
+            - "af:ff:21:08:af:e3:94:5d:ae:be:9a:d2:00:e4:9d:5e"
       # - run:
       #    name: Delete All SSH keys and Add the installed one
       #    command: ssh-add -D && ssh-add ~/.ssh/id_rsa_a42fc8ede9cdb7703618f855c916f25c
