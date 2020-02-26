@@ -2,7 +2,6 @@ version: 2
 
 # https://gist.github.com/megrxu/94e825d74ae0ddb5f8eab9da3422258b
 
-
 workflows:
   version: 2
   build:
