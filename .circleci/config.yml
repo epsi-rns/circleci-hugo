@@ -1,59 +1,13 @@
-version: 2
-
-# https://gist.github.com/megrxu/94e825d74ae0ddb5f8eab9da3422258b
-
-
+# Use the latest 2.1 version of CircleCI pipeline process engine. See: https://circleci.com/docs/2.0/configuration-reference
+version: 2.1
+# Use a package of configuration called an orb.
+orbs:
+  # Declare a dependency on the welcome-orb
+  welcome: circleci/welcome-orb@0.4.1
+# Orchestrate or schedule a set of jobs
 workflows:
-  version: 2
-  build:
+  # Name the workflow "welcome"
+  welcome:
+    # Run the welcome/run job in its own container
     jobs:
-      - build
-      - deploy:
-          requires:
-            - build
-          filters:
-            branches:
-              only: master
-
-jobs:
-  build:
-    docker:
-      - image: cibuilds/hugo:latest
-    working_directory: ~/blog
-    environment:
-      HUGO_BUILD_DIR: public
-    steps:
-      # - run: apk update && apk add git
-      - checkout
-      - run: HUGO_ENV=production hugo -F -v -d $HUGO_BUILD_DIR
-      - persist_to_workspace:
-          root: public
-          paths: .
-  deploy:
-    docker:
-      - image: node:8.10.0
-    steps:
-      - checkout
-      - attach_workspace:
-          at: public
-      - run:
-          name: Disable jekyll builds
-          command: touch public/.nojekyll
-      # - run:
-      #    name: Custom Domain
-      #    command: echo "example.domain" > public/CNAME
-      - run:
-          name: Install and configure dependencies
-          command: |
-            npm install -g --silent gh-pages@2.0.1
-            git config user.email "ci-build@example.domain"
-            git config user.name "ci-build"
-      - add_ssh_keys:
-          fingerprints:
-            - "fd:f0:14:57:6a:7f:42:98:ce:b6:99:a6:84:f4:c9:c4"
-      # - run:
-      #    name: Delete All SSH keys and Add the installed one
-      #    command: ssh-add -D && ssh-add ~/.ssh/id_rsa_a42fc8ede9cdb7703618f855c916f25c
-      - run:
-          name: Deploy docs to gh-pages branch
-          command: gh-pages --dotfiles --message "[skip ci] Updates" --dist public
+      - welcome/run
