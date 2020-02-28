@@ -1,0 +1,52 @@
+version: 2
+
+# https://gist.github.com/megrxu/94e825d74ae0ddb5f8eab9da3422258b
+
+workflows:
+  version: 2
+  build:
+    jobs:
+      - build
+      - deploy:
+          requires:
+            - build
+          filters:
+            branches:
+              only: master
+
+jobs:
+  build:
+    docker:
+      - image: cibuilds/hugo:latest
+    working_directory: ~/blog
+    environment:
+      HUGO_BUILD_DIR: public
+    steps:
+      # - run: apk update && apk add git
+      - checkout
+      - run: HUGO_ENV=production hugo -F -v -d $HUGO_BUILD_DIR
+      - persist_to_workspace:
+          root: public
+          paths: .
+  deploy:
+    docker:
+      - image: node:8.10.0
+    steps:
+      - checkout
+      - attach_workspace:
+          at: public
+      - run:
+          name: Disable jekyll builds
+          command: touch public/.nojekyll
+      - run:
+          name: Install and configure dependencies
+          command: |
+            npm install -g --silent gh-pages@2.0.1
+            git config user.email "ci-build@example.domain"
+            git config user.name "ci-build"
+      - add_ssh_keys:
+          fingerprints:
+            - "af:ff:21:08:af:e3:94:5d:ae:be:9a:d2:00:e4:9d:5e"
+      - run:
+          name: Deploy docs to gh-pages branch
+          command: gh-pages --dotfiles --message "[skip ci] Updates" --dist public
