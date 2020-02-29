@@ -1,4 +1,4 @@
-# Hugo Materialize Test Drive on Travis
+# Hugo Materialize Test Drive on CircleCIU
 
 An example of Hugo site using Materialize for personal learning purpose.
 

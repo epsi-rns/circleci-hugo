@@ -24,8 +24,8 @@ jobs:
       - run:
           name: Prepare Git Initialization
           command: |
-            git config user.email "ci-build@example.domain"
-            git config user.name "ci-build"
+            git config user.email "someone@somewhere"
+            git config user.name "someone"
             git branch -a -l | cat
             if [ $(git branch -a -l | grep gh-pages | wc -l) -eq "0" ]; then
               echo "[Create gh-pages for the first time]"
